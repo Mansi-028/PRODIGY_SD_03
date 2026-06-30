@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact Manager | Prodigy InfoTech Task 03</title>
+<meta name="description" content="A simple contact management system - Prodigy InfoTech Task 03 by Mansi." />
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #6366f1 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1f2937;
+  }
+  .card {
+    background: #fff; border-radius: 14px; padding: 32px;
+    width: 100%; max-width: 560px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  }
+  .header { text-align: center; margin-bottom: 20px; }
+  .badge {
+    display: inline-block; background: #eef2ff; color: #4338ca;
+    padding: 4px 12px; border-radius: 999px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .header h1 { margin: 12px 0 6px; font-size: 26px; color: #111827; }
+  .subtitle { margin: 0; color: #6b7280; font-size: 14px; }
+  .form { display: flex; flex-direction: column; gap: 12px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+  .field input, .toolbar input {
+    width: 100%; padding: 11px 13px; font-size: 14px;
+    border: 1px solid #d1d5db; border-radius: 8px; outline: none;
+    transition: border 0.15s, box-shadow 0.15s;
+  }
+  .field input:focus, .toolbar input:focus {
+    border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+  }
+  .actions { display: flex; gap: 10px; margin-top: 4px; }
+  .btn {
+    flex: 1; padding: 11px; font-size: 14px; font-weight: 600;
+    border-radius: 8px; border: none; cursor: pointer;
+    transition: background 0.15s, transform 0.05s;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn.primary { background: #6366f1; color: #fff; }
+  .btn.primary:hover { background: #4f46e5; }
+  .btn.ghost { background: #f3f4f6; color: #374151; }
+  .btn.ghost:hover { background: #e5e7eb; }
+  .btn.small { flex: 0 0 auto; padding: 6px 12px; font-size: 13px; }
+  .btn.danger { background: #fef2f2; color: #b91c1c; }
+  .btn.danger:hover { background: #fee2e2; }
+  .error {
+    padding: 10px 12px; background: #fef2f2; color: #b91c1c;
+    border: 1px solid #fecaca; border-radius: 8px; font-size: 13px;
+  }
+  .toolbar {
+    margin-top: 22px; padding-top: 18px; border-top: 1px solid #e5e7eb;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .count { font-size: 12px; color: #6b7280; white-space: nowrap; }
+  .list { list-style: none; padding: 0; margin: 14px 0 0; display: flex; flex-direction: column; gap: 8px; }
+  .item {
+    background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px;
+    padding: 12px 14px; display: flex; align-items: center; gap: 12px;
+  }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: #6366f1; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; flex-shrink: 0;
+  }
+  .info { flex: 1; min-width: 0; }
+  .info .name { font-weight: 600; color: #111827; font-size: 14px; }
+  .info .meta { font-size: 12px; color: #6b7280; margin-top: 2px; word-break: break-all; }
+  .row-actions { display: flex; gap: 6px; }
+  .empty { margin-top: 14px; text-align: center; padding: 20px; color: #9ca3af; font-size: 14px; }
+  .footer { margin-top: 22px; color: rgba(255,255,255,0.8); font-size: 12px; text-align: center; }
+  @media (max-width: 480px) {
+    .card { padding: 22px; }
+    .item { flex-wrap: wrap; }
+    .row-actions { width: 100%; }
+    .row-actions .btn { flex: 1; }
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <span class="badge">Task 03</span>
+      <h1>Contact Manager</h1>
+      <p class="subtitle">Add, view, edit and delete your contacts. Saved in your browser.</p>
+    </div>
+
+    <form id="contactForm" class="form" novalidate>
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="e.g. Mansi Sharma" />
+      </div>
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" placeholder="e.g. +91 98765 43210" />
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="e.g. mansi@example.com" />
+      </div>
+
+      <div id="error" class="error" style="display:none;"></div>
+
+      <div class="actions">
+        <button type="submit" id="submitBtn" class="btn primary">Add Contact</button>
+        <button type="button" id="cancelBtn" class="btn ghost" style="display:none;">Cancel</button>
+      </div>
+    </form>
+
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="Search by name, phone, or email..." />
+      <span class="count" id="count">0 contacts</span>
+    </div>
+
+    <ul id="list" class="list"></ul>
+    <div id="empty" class="empty">No contacts yet. Add your first one above.</div>
+  </div>
+
+  <footer class="footer">Made by Mansi — Prodigy InfoTech Software Development Internship — Task 03</footer>
+
+<script>
+  const STORAGE_KEY = "task03_contacts";
+  let contacts = [];
+  let editId = null;
+
+  const $ = (id) => document.getElementById(id);
+  const form = $("contactForm"), nameI = $("name"), phoneI = $("phone"), emailI = $("email");
+  const errorEl = $("error"), submitBtn = $("submitBtn"), cancelBtn = $("cancelBtn");
+  const searchI = $("search"), countEl = $("count"), listEl = $("list"), emptyEl = $("empty");
+
+  const isValidEmail = (e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+  const isValidPhone = (p) => { const d = p.replace(/[^0-9]/g, ""); return d.length >= 7 && d.length <= 15; };
+  const getInitials = (n) => n.split(" ").filter(Boolean).slice(0,2).map(p => p[0].toUpperCase()).join("");
+  const escapeHtml = (s) => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  function load() {
+    try { contacts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { contacts = []; }
+  }
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts)); }
+
+  function showError(msg) { errorEl.textContent = msg; errorEl.style.display = msg ? "block" : "none"; }
+
+  function resetForm() {
+    editId = null;
+    nameI.value = phoneI.value = emailI.value = "";
+    submitBtn.textContent = "Add Contact";
+    cancelBtn.style.display = "none";
+    showError("");
+  }
+
+  function render() {
+    const term = searchI.value.trim().toLowerCase();
+    const filtered = contacts
+      .filter(c => !term || c.name.toLowerCase().includes(term) || c.phone.toLowerCase().includes(term) || c.email.toLowerCase().includes(term))
+      .sort((a,b) => a.name.localeCompare(b.name));
+
+    countEl.textContent = contacts.length + " " + (contacts.length === 1 ? "contact" : "contacts");
+
+    if (filtered.length === 0) {
+      listEl.innerHTML = "";
+      emptyEl.style.display = "block";
+      emptyEl.textContent = contacts.length === 0 ? "No contacts yet. Add your first one above." : "No contacts match your search.";
+      return;
+    }
+    emptyEl.style.display = "none";
+    listEl.innerHTML = filtered.map(c => `
+      <li class="item">
+        <div class="avatar">${escapeHtml(getInitials(c.name))}</div>
+        <div class="info">
+          <div class="name">${escapeHtml(c.name)}</div>
+          <div class="meta">${escapeHtml(c.phone)} • ${escapeHtml(c.email)}</div>
+        </div>
+        <div class="row-actions">
+          <button class="btn ghost small" data-edit="${c.id}">Edit</button>
+          <button class="btn danger small" data-del="${c.id}">Delete</button>
+        </div>
+      </li>
+    `).join("");
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    showError("");
+    const n = nameI.value.trim(), p = phoneI.value.trim(), em = emailI.value.trim();
+    if (!n || !p || !em) return showError("All fields are required.");
+    if (!isValidPhone(p)) return showError("Please enter a valid phone number (7-15 digits).");
+    if (!isValidEmail(em)) return showError("Please enter a valid email address.");
+    if (editId) {
+      contacts = contacts.map(c => c.id === editId ? { ...c, name: n, phone: p, email: em } : c);
+    } else {
+      contacts.push({ id: Date.now().toString(), name: n, phone: p, email: em });
+    }
+    save(); resetForm(); render();
+  });
+
+  cancelBtn.addEventListener("click", resetForm);
+  searchI.addEventListener("input", render);
+
+  listEl.addEventListener("click", (e) => {
+    const t = e.target;
+    if (!(t instanceof HTMLElement)) return;
+    const editID = t.getAttribute("data-edit");
+    const delID = t.getAttribute("data-del");
+    if (editID) {
+      const c = contacts.find(x => x.id === editID);
+      if (!c) return;
+      editId = c.id;
+      nameI.value = c.name; phoneI.value = c.phone; emailI.value = c.email;
+      submitBtn.textContent = "Save Changes";
+      cancelBtn.style.display = "inline-block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (delID) {
+      const c = contacts.find(x => x.id === delID);
+      if (!c) return;
+      if (!confirm(`Delete contact "${c.name}"?`)) return;
+      contacts = contacts.filter(x => x.id !== delID);
+      if (editId === delID) resetForm();
+      save(); render();
+    }
+  });
+
+  load(); render();
+</script>
+</body>
+</html>
